@@ -1,0 +1,68 @@
+﻿@{
+    ViewData["Title"] = "Login Page";
+}
+
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "";
+$database = "poetrydb";
+
+$conn = new mysqli($servername, $username, $password, $database);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+ $firstname = $_POST["firstname"];
+    $lastname = $_POST["lastname"];
+    $email = $_POST["email"];
+    $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
+
+    // Prepare and bind SQL statement
+    $stmt = $conn->prepare("INSERT INTO users (firstname, lastname, email, password) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("ssss", $firstname, $lastname, $email, $password);
+
+    // Execute statement
+    if ($stmt->execute() === TRUE) {
+        echo "New record created successfully";
+    } else {
+        echo "Error: " . $stmt->error;
+    }
+
+    $stmt->close();
+    $conn->close();
+}
+?>
+
+<form class="form" method="POST">
+    <p class="title">Register </p>
+    <p class="message">Signup now and get full access to our app. </p>
+    <div class="flex">
+        <label>
+            <input required="" placeholder="" type="text" class="input">
+            <span>Firstname</span>
+        </label>
+
+        <label>
+            <input required="" placeholder="" type="text" class="input">
+            <span>Lastname</span>
+        </label>
+    </div>
+
+    <label>
+        <input required="" placeholder="" type="email" class="input">
+        <span>Email</span>
+    </label>
+
+    <label>
+        <input required="" placeholder="" type="password" class="input">
+        <span>Password</span>
+    </label>
+    <label>
+        <input required="" placeholder="" type="password" class="input">
+        <span>Confirm password</span>
+    </label>
+    <button class="submit">Submit</button>
+    <p class="signin">Already have an acount ? <a href="#">Login</a> </p>
+</form>
